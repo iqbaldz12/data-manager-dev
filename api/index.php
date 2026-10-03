@@ -1,6 +1,8 @@
 <?php
 
-define('LARAVEL_START', microtime(true));
+if (!defined('LARAVEL_START')) {
+    define('LARAVEL_START', microtime(true));
+}
 
 $projectRoot = dirname(__DIR__);
 
@@ -36,8 +38,8 @@ foreach ($cacheFiles as $cacheFile) {
 // ── 3. Tell Laravel where to find storage & bootstrap/cache ──
 $_ENV['APP_STORAGE_PATH']        = '/tmp/storage';
 $_SERVER['APP_STORAGE_PATH']     = '/tmp/storage';
-$_ENV['APP_BOOTSTRAP_CACHE']     = '/tmp/bootstrap/cache';
-$_SERVER['APP_BOOTSTRAP_CACHE']  = '/tmp/bootstrap/cache';
+$_ENV['APP_BOOTSTRAP_PATH']      = '/tmp/bootstrap';
+$_SERVER['APP_BOOTSTRAP_PATH']   = '/tmp/bootstrap';
 
 // ── 4. Fix working directory ──
 chdir($projectRoot);

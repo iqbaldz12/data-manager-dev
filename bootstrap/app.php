@@ -26,8 +26,8 @@ $app = Application::configure(basePath: dirname(__DIR__))
 if ($storagePath = ($_ENV['APP_STORAGE_PATH'] ?? $_SERVER['APP_STORAGE_PATH'] ?? null)) {
     $app->useStoragePath($storagePath);
 }
-if ($cachePath = ($_ENV['APP_BOOTSTRAP_CACHE'] ?? $_SERVER['APP_BOOTSTRAP_CACHE'] ?? null)) {
-    $app->useBootstrapPath($cachePath);
+if ($bootstrapPath = ($_ENV['APP_BOOTSTRAP_PATH'] ?? $_SERVER['APP_BOOTSTRAP_PATH'] ?? null)) {
+    $app->useBootstrapPath($bootstrapPath);
 }
 
 return $app;
