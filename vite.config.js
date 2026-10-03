@@ -4,12 +4,11 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
     plugins: [
-        tailwindcss(),  // Coba taruh tailwindcss() di sini
+        tailwindcss(),
         laravel({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
-                'resources/js/passkeys.js',
             ],
             refresh: true,
         }),
