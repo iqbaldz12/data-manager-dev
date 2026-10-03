@@ -2,6 +2,9 @@
     "$schema": "https://www.schemastore.org/package.json",
     "private": true,
     "type": "module",
+    "engines": {
+        "node": "22.x"
+    },
     "scripts": {
         "build": "vite build",
         "dev": "vite dev"
@@ -14,15 +17,5 @@
         "concurrently": "^10.0.3",
         "laravel-vite-plugin": "^3.1",
         "vite": "^8.0.0"
-    },
-    "optionalDependencies": {
-        "@laravel/multiplex": "^0.4.1",
-        "@rollup/rollup-linux-x64-gnu": "4.9.5",
-        "@tailwindcss/oxide-linux-x64-gnu": "^4.0.1",
-        "lightningcss-linux-x64-gnu": "^1.29.1"
-    },
-    "engines": {
-    "node": "24.x",
-    "npm": "11.x"
-}
+    }
 }
