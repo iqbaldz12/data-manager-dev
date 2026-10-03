@@ -3,7 +3,8 @@
     "framework": null,
     "functions": {
         "api/index.php": {
-            "runtime": "vercel-php@0.8.0"
+            "runtime": "vercel-php@0.8.0",
+            "maxDuration": 30
         }
     },
     "routes": [
@@ -12,11 +13,11 @@
             "dest": "/public/build/$1"
         },
         {
-            "src": "/storage/(.*)",
-            "dest": "/public/storage/$1"
+            "src": "/public/(.*)",
+            "dest": "/public/$1"
         },
         {
-            "src": "/(favicon\\.ico|robots\\.txt|sitemap\\.xml)",
+            "src": "/(favicon\\.ico|robots\\.txt)",
             "dest": "/public/$1"
         },
         {
@@ -25,6 +26,5 @@
         }
     ],
     "buildCommand": "npm run build",
-    "outputDirectory": "public",
     "installCommand": "npm install"
 }

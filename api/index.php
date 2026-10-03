@@ -1,10 +1,12 @@
 <?php
 
-// Fix working directory for Vercel (files are at /var/task)
+define('LARAVEL_START', microtime(true));
+
 $projectRoot = dirname(__DIR__);
 
-// Bootstrap storage dirs that must exist at runtime (Vercel has /tmp writable)
-$storageDirs = [
+// ── 1. Bootstrap writable dirs on Vercel (/tmp is the only writable location) ──
+$tmpDirs = [
+    '/tmp/bootstrap/cache',
     '/tmp/storage/app/public',
     '/tmp/storage/app/livewire-tmp',
     '/tmp/storage/framework/cache/data',
@@ -14,27 +16,32 @@ $storageDirs = [
     '/tmp/storage/logs',
 ];
 
-foreach ($storageDirs as $dir) {
+foreach ($tmpDirs as $dir) {
     if (!is_dir($dir)) {
         mkdir($dir, 0775, true);
     }
 }
 
-// Point Laravel's storage path to /tmp (only writable dir on Vercel)
-$_ENV['APP_STORAGE_PATH'] = '/tmp/storage';
-$_SERVER['APP_STORAGE_PATH'] = '/tmp/storage';
-
-// Set the document root so Laravel can find public assets
-$_SERVER['DOCUMENT_ROOT'] = $projectRoot . '/public';
-chdir($projectRoot);
-
-// Serve static files directly when accessed via the PHP runtime
-$uri = $_SERVER['REQUEST_URI'] ?? '/';
-$path = parse_url($uri, PHP_URL_PATH);
-$filePath = $projectRoot . '/public' . $path;
-
-if ($path !== '/' && file_exists($filePath) && !is_dir($filePath)) {
-    return false; // Let the web server serve the file
+// ── 2. Copy bootstrap/cache precompiled files if not yet in /tmp ──
+// These are pre-generated via artisan cache commands and committed to git
+$cacheFiles = ['packages.php', 'services.php', 'config.php', 'routes-v7.php', 'events.php'];
+foreach ($cacheFiles as $cacheFile) {
+    $src = $projectRoot . '/bootstrap/cache/' . $cacheFile;
+    $dst = '/tmp/bootstrap/cache/' . $cacheFile;
+    if (file_exists($src) && !file_exists($dst)) {
+        copy($src, $dst);
+    }
 }
 
+// ── 3. Tell Laravel where to find storage & bootstrap/cache ──
+$_ENV['APP_STORAGE_PATH']        = '/tmp/storage';
+$_SERVER['APP_STORAGE_PATH']     = '/tmp/storage';
+$_ENV['APP_BOOTSTRAP_CACHE']     = '/tmp/bootstrap/cache';
+$_SERVER['APP_BOOTSTRAP_CACHE']  = '/tmp/bootstrap/cache';
+
+// ── 4. Fix working directory ──
+chdir($projectRoot);
+$_SERVER['DOCUMENT_ROOT'] = $projectRoot . '/public';
+
+// ── 5. Pass through to Laravel ──
 require $projectRoot . '/public/index.php';

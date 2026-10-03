@@ -22,9 +22,12 @@ $app = Application::configure(basePath: dirname(__DIR__))
         );
     })->create();
 
-// On Vercel, redirect storage to /tmp (only writable location)
+// On Vercel, redirect storage & bootstrap/cache to /tmp (only writable location)
 if ($storagePath = ($_ENV['APP_STORAGE_PATH'] ?? $_SERVER['APP_STORAGE_PATH'] ?? null)) {
     $app->useStoragePath($storagePath);
+}
+if ($cachePath = ($_ENV['APP_BOOTSTRAP_CACHE'] ?? $_SERVER['APP_BOOTSTRAP_CACHE'] ?? null)) {
+    $app->useBootstrapPath($cachePath);
 }
 
 return $app;
