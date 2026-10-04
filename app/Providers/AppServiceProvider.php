@@ -23,6 +23,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (app()->environment('production') || !empty($_SERVER['HTTP_X_FORWARDED_PROTO']) || !empty($_SERVER['VERCEL'])) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
+
+        if (!empty($_SERVER['HTTP_HOST'])) {
+            config(['app.url' => 'https://' . $_SERVER['HTTP_HOST']]);
+        }
+
         $this->configureDefaults();
     }
 

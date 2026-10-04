@@ -45,11 +45,16 @@ $_SERVER['APP_BOOTSTRAP_PATH']   = '/tmp/bootstrap';
 $_ENV['VIEW_COMPILED_PATH']      = '/tmp/views';
 $_SERVER['VIEW_COMPILED_PATH']   = '/tmp/views';
 
-// ── 5. Fix working directory & HTTPS ──
+// ── 5. Fix working directory, HTTPS & APP_URL ──
 chdir($projectRoot);
 $_SERVER['DOCUMENT_ROOT'] = $projectRoot . '/public';
 $_SERVER['HTTPS'] = 'on';
 $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+
+if (!empty($_SERVER['HTTP_HOST'])) {
+    $_ENV['APP_URL'] = 'https://' . $_SERVER['HTTP_HOST'];
+    $_SERVER['APP_URL'] = 'https://' . $_SERVER['HTTP_HOST'];
+}
 
 // ── 6. Pass through to Laravel ──
 require $projectRoot . '/public/index.php';
