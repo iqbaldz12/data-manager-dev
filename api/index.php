@@ -16,6 +16,7 @@ $tmpDirs = [
     '/tmp/storage/framework/testing',
     '/tmp/storage/framework/views',
     '/tmp/storage/logs',
+    '/tmp/views',
 ];
 
 foreach ($tmpDirs as $dir) {
@@ -25,8 +26,7 @@ foreach ($tmpDirs as $dir) {
 }
 
 // ── 2. Copy bootstrap/cache precompiled files if not yet in /tmp ──
-// These are pre-generated via artisan cache commands and committed to git
-$cacheFiles = ['packages.php', 'services.php', 'config.php', 'routes-v7.php', 'events.php'];
+$cacheFiles = ['packages.php', 'services.php'];
 foreach ($cacheFiles as $cacheFile) {
     $src = $projectRoot . '/bootstrap/cache/' . $cacheFile;
     $dst = '/tmp/bootstrap/cache/' . $cacheFile;
@@ -41,9 +41,13 @@ $_SERVER['APP_STORAGE_PATH']     = '/tmp/storage';
 $_ENV['APP_BOOTSTRAP_PATH']      = '/tmp/bootstrap';
 $_SERVER['APP_BOOTSTRAP_PATH']   = '/tmp/bootstrap';
 
-// ── 4. Fix working directory ──
+// ── 4. Ensure Blade compiled views go to /tmp ──
+$_ENV['VIEW_COMPILED_PATH']      = '/tmp/views';
+$_SERVER['VIEW_COMPILED_PATH']   = '/tmp/views';
+
+// ── 5. Fix working directory ──
 chdir($projectRoot);
 $_SERVER['DOCUMENT_ROOT'] = $projectRoot . '/public';
 
-// ── 5. Pass through to Laravel ──
+// ── 6. Pass through to Laravel ──
 require $projectRoot . '/public/index.php';
