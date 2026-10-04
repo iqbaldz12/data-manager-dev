@@ -23,7 +23,12 @@
     },
     "routes": [
         {
-            "handle": "filesystem"
+            "src": "/build/(.*)",
+            "dest": "/build/$1"
+        },
+        {
+            "src": "/(favicon\\.ico|robots\\.txt|apple-touch-icon\\.png)",
+            "dest": "/$1"
         },
         {
             "src": "/(.*)",
