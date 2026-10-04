@@ -96,6 +96,7 @@
         ],
         
         "vercel": [
+        "composer install --no-interaction --prefer-dist --no-progress",
         "npm ci",
         "npm run build"
     ]
